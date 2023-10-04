@@ -37,8 +37,29 @@ const MORSE_TABLE = {
     '-----':  '0',
 };
 
+const expr1 = "00101010100000000010001011101000101110100000111111**********00001011110000111111000010111000101110100000111010";
+
 function decode(expr) {
-    // write your solution here
+    let result = '';
+    const array = expr.match(/.{1,10}/g);
+    array.forEach(str => {
+        function replacer(match, p1, p2, p3) {
+            if (p1) {
+                // Если первая группа (ведущие нули) существует, заменяем ее на пустую строку
+                return '';
+            } else if (p2) {
+                // Если вторая группа равна '10', заменяем ее на точку
+                return '.';
+            } else if (p3) {
+                // Если третья группа равна '11', заменяем ее на тире
+                return '-';
+            }
+        }
+        const regex = /(^0+)|(10)|(11)/g;
+        const replacedStr = str.replace(regex, replacer)
+        result += MORSE_TABLE[replacedStr] || ' ';
+    });
+    return result
 }
 
 module.exports = {
